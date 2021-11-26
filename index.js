@@ -1,92 +1,291 @@
+let x, y;
+const mx = 8.77;
+const my = 7.795;
 let pos = 0;
 let vel = 0;
 let acc = 0.005;
 const canvasWidth = 1600;
 const canvasHeight = 900;
 let nabytek;
-let step = 1;
+let step = 0;
 let centerX = 13;
 let centerY = 935;
-
+let test = false;
+const w = 2306;
+const h = 1403;
+let introCounter = 255;
+let isInPositiveMotion = false;
+let isInNegativeMotion = false;
+let initialStepSetup = true;
 let img;
+let music;
+let intro = true;
+let leftArrowHover = false;
+let rightArrowHover = false;
+let introArrowHover = false;
+let fadeOut = false;
+
+const positions = [
+  { centerX: 13, centerY: 935, controlX: 54, controlY: 171 },
+  { centerX: 1258, centerY: 1442, controlX: 14, controlY: 264 },
+  { centerX: 22, centerY: 3406, controlX: 108, controlY: 331 },
+  { centerX: 1548, centerY: 2580, controlX: 334, controlY: 360 },
+  { centerX: 4293, centerY: 2627, controlX: 477, controlY: 129 },
+  { centerX: 3556, centerY: 935, controlX: 150, controlY: 464 },
+  { centerX: 17 * mx, centerY: 690 * my, controlX: 48, controlY: 609 }, // WRONG
+  { centerX: 2337, centerY: 5121, controlX: 323, controlY: 556 },
+  { centerX: 4328, centerY: 4451, controlX: 456, controlY: 832 },
+  { centerX: 7020, centerY: 5355, controlX: 887, controlY: 499 },
+  { centerX: 6959, centerY: 3578, controlX: 682, controlY: 373 },
+  { centerX: 784 * mx, centerY: 80 * my, controlX: 971, controlY: 70 }, // WRONG
+  { centerX: 8906, centerY: 125, controlX: 1181, controlY: 386 },
+  { centerX: 8520, centerY: 1653, controlX: 1162, controlY: -40 },
+  { centerX: 10905, centerY: 413, controlX: 1326, controlY: 210 },
+  { centerX: 11204, centerY: 2494, controlX: 1291, controlY: 397 },
+  { centerX: 8994, centerY: 2697, controlX: 1017, controlY: 500 },
+  { centerX: 1038 * mx, centerY: 606 * my, controlX: 1142, controlY: 541 }, // WRONG
+  { centerX: 10458, centerY: 4007, controlX: 1340, controlY: 520 },
+  { centerX: 11221, centerY: 4700, controlX: 119, controlY: 142 },
+];
+
 function preload() {
   img = loadImage('k.jpg');
+  soundFormats('mp3');
+  music = loadSound('hud');
+  fontBold = loadFont('public/calibri-regular.ttf');
 }
 
 function setup() {
   var canvas = createCanvas(canvasWidth, canvasHeight);
   canvas.parent('sketch-holder');
+  x = positions[step].centerX;
+  y = positions[step].centerY;
   //   nabytek = new Ratio(1, 128, 320, 180, '    ');
 }
 
 function draw() {
-  if (pos < 100) {
-    pos += vel;
+  if (intro) {
+    noStroke();
+    fill(255, 255, 255);
+    rect(0, 0, 1600, 900);
+    textFont(fontBold);
+
+    fill(55, 77, 137);
+    textAlign(CENTER, CENTER);
+    textSize(64);
+    text('Projeďte si s námi', 800, 350);
+    text('naši 20 letou cestu smíchu!', 800, 450);
+    fill(introArrowHover ? 255 : 55, 77, 137);
+    text('->', 800, 580);
+    textAlign(LEFT);
+    fill(0, introCounter);
+    rect(0, 0, 1600, 900);
+    if (introCounter > 0) {
+      introCounter -= 2;
+    }
+    if (fadeOut && introCounter < 500) {
+      introCounter += 6;
+    }
+    if (introCounter >= 500) {
+      music.play();
+      introCounter = 255;
+      intro = false;
+    }
   } else {
-    pos = 100;
+    if (introCounter > 0) {
+      introCounter -= 2;
+    }
+    if (isInPositiveMotion) {
+      if (pos === 100) {
+        step++;
+        pos = 0;
+        isInPositiveMotion = false;
+      } else {
+        if (pos < 99.95) {
+          pos += vel;
+        } else {
+          pos = 100;
+        }
+        if (pos < 50.1 && vel < 1) {
+          vel = Number((vel + acc).toFixed(3));
+        } else if (pos > 50.1 && vel > 0) {
+          vel = Number((vel - acc).toFixed(3));
+        }
+        x = bezierPoint(
+          positions[step].centerX,
+          positions[step].centerX,
+          positions[step].controlX * mx,
+          positions[step + 1].centerX,
+          pos / 100
+        );
+        y = bezierPoint(
+          positions[step].centerY,
+          positions[step].centerY,
+          positions[step].controlY * my,
+          positions[step + 1].centerY,
+          pos / 100
+        );
+      }
+    }
+    if (isInNegativeMotion) {
+      if (pos === 100) {
+        step--;
+        pos = 0;
+        isInNegativeMotion = false;
+      } else {
+        if (pos < 99.95) {
+          pos += vel;
+        } else {
+          pos = 100;
+        }
+        if (pos < 50.1 && vel < 1) {
+          vel = Number((vel + acc).toFixed(3));
+        } else if (pos > 50.1 && vel > 0) {
+          vel = Number((vel - acc).toFixed(3));
+        }
+        x = bezierPoint(
+          positions[step].centerX,
+          positions[step].centerX,
+          positions[step - 1].centerX,
+          positions[step - 1].centerX,
+          pos / 100
+        );
+        y = bezierPoint(
+          positions[step].centerY,
+          positions[step].centerY,
+          positions[step - 1].centerY,
+          positions[step - 1].centerY,
+          pos / 100
+        );
+      }
+    }
+
+    // image(img, 0, 0, canvasWidth, canvasHeight, centerX, centerY, 2807, 1403);
+    if (test) {
+      image(img, 0, 0, canvasWidth, canvasHeight, 0, 0, 14032, 7016);
+      noFill();
+      stroke(0);
+      strokeWeight(5);
+      bezier(
+        (positions[step].centerX + w / 2) / mx,
+        (positions[step].centerY + h / 2) / my,
+        mouseX + w / mx / 2,
+        mouseY + h / my / 2,
+        (positions[step + 1].centerX + w / 2) / mx,
+        (positions[step + 1].centerY + h / 2) / my,
+        (positions[step + 1].centerX + w / 2) / mx,
+        (positions[step + 1].centerY + h / 2) / my
+      );
+    } else {
+      image(img, 0, 0, canvasWidth, canvasHeight, x, y, 2807, 1403);
+      fill(0, introCounter);
+      rect(0, 0, canvasWidth, canvasHeight);
+    }
+
+    noStroke();
+    // textSize(32);
+    // text((mouseX * mx).toFixed(0), 100, 350);
+    // text((mouseY * my).toFixed(0), 100, 400);
+    //   text((mouseX * mx + 320 * mx).toFixed(0), 100, 450);
+    //   text((mouseY * my + 180 * my).toFixed(0), 100, 500);
+    // text(centerX, 100, 350);
+    // text(centerY, 100, 400);
+    // text(mouseX.toFixed(0), 20, 350);
+    // text(mouseY.toFixed(0), 20, 400);
+    // text(x, 20, 450);
+    // text(y, 20, 500);
+    // text(pos, 20, 650);
+    // text(step, 800, 50);
+    // textSize(64);
+    fill(leftArrowHover ? 255 : 55, 77, 137);
+    text('<-', 750, 860);
+    fill(55, 77, 137);
+    fill(rightArrowHover ? 255 : 55, 77, 137);
+    text('->', 850, 860);
+    //   nabytek.display();
+    //   text(pos, 100, 450);
+    //   text(vel, 100, 500);
   }
-  if (pos <= 50 && vel < 1) {
-    vel += acc;
-  } else if (pos > 50 && vel > 0) {
-    vel -= acc;
+}
+
+function mouseMoved() {
+  if (mouseX > 730 && mouseX < 805 && mouseY > 830 && mouseY < 900) {
+    leftArrowHover = true;
+  } else leftArrowHover = false;
+
+  if (mouseX > 820 && mouseX < 900 && mouseY > 810 && mouseY < 900) {
+    rightArrowHover = true;
+  } else rightArrowHover = false;
+
+  if (intro) {
+    if (mouseX > 780 && mouseX < 820 && mouseY > 550 && mouseY < 600) {
+      introArrowHover = true;
+    } else introArrowHover = false;
   }
-
-  setPosition();
-
-  let x = bezierPoint(800, 1000, 900, 700, pos / 100);
-  let y = bezierPoint(100, 10, 450, 682, pos / 100);
-  image(img, 0, 0, canvasWidth, canvasHeight, 0, 0, 14032, 7016);
-  //   image(img, 0, 0, canvasWidth, canvasHeight, centerX, centerY, 2807, 1403);
-  fill(255, 0, 0);
-  ellipse(x, y, 35, 35);
-
-  fill(0);
-  noStroke();
-  textSize(32);
-  //   text((mouseX * 8.77).toFixed(0), 100, 350);
-  //   text((mouseY * 7.795).toFixed(0), 100, 400);
-  //   text((mouseX * 8.77 + 320 * 8.77).toFixed(0), 100, 450);
-  //   text((mouseY * 7.795 + 180 * 7.795).toFixed(0), 100, 500);
-  text(centerX, 100, 350);
-  text(centerY, 100, 400);
-  text(mouseX, 100, 450);
-  text(mouseY, 100, 500);
-  text(step, 800, 50);
-  text('<-', 770, 880);
-  text('->', 830, 880);
-  textSize(16);
-  //   nabytek.display();
-  //   text(pos, 100, 450);
-  //   text(vel, 100, 500);
-
-  noFill();
-  stroke(0);
-  strokeWeight(5);
-  bezier(800, 100, 1000, 10, 868, 310, 700, 382);
 }
 
 function mousePressed() {
   //   if (nabytek.check()) {
   //     nabytek.dragged = true;
   //   }
+  if (intro && mouseX > 780 && mouseX < 820 && mouseY > 550 && mouseY < 600) {
+    fadeOut = true;
+  }
   if (
-    mouseX > 760 &&
+    mouseX > 730 &&
     mouseX < 805 &&
-    mouseY > 850 &&
+    mouseY > 810 &&
     mouseY < 900 &&
     step > 0
   ) {
-    print('left');
-    step--;
+    if (test) {
+      step--;
+    } else {
+      pos = 0;
+      isInNegativeMotion = true;
+    }
   } else if (
     mouseX > 820 &&
-    mouseX < 870 &&
-    mouseY > 850 &&
+    mouseX < 900 &&
+    mouseY > 810 &&
     mouseY < 900 &&
-    step < 20
+    step < 19
   ) {
-    print('right');
-    step++;
+    if (test) {
+      step++;
+    } else {
+      pos = 0;
+      isInPositiveMotion = true;
+    }
+  }
+}
+
+function keyTyped() {
+  if (key === ' ') {
+    test = !test;
+  }
+}
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) {
+    if (test && step > 0) {
+      step--;
+    } else if (test && step <= 0) {
+      step = 18;
+    } else {
+      pos = 0;
+      isInNegativeMotion = true;
+    }
+  }
+  if (keyCode === RIGHT_ARROW) {
+    if (test && step < 18) {
+      step++;
+    } else if (test && step >= 18) {
+      step = 0;
+    } else {
+      pos = 0;
+      isInPositiveMotion = true;
+    }
   }
 }
 
@@ -131,107 +330,3 @@ function mousePressed() {
 //     return above;
 //   }
 // }
-
-function setPosition() {
-  switch (step) {
-    case 1:
-      centerX = 13;
-      centerY = 935;
-      break;
-
-    case 2:
-      centerX = 1258;
-      centerY = 1442;
-      break;
-
-    case 3:
-      centerX = 22;
-      centerY = 3406;
-      break;
-
-    case 4:
-      centerX = 1548;
-      centerY = 2580;
-      break;
-
-    case 5:
-      centerX = 4293;
-      centerY = 2627;
-      break;
-
-    case 6:
-      centerX = 3556;
-      centerY = 935;
-      break;
-
-    case 7:
-      centerX = 1258; // WRONG
-      centerY = 1442; // WRONG
-      break;
-
-    case 8:
-      centerX = 2337;
-      centerY = 5121;
-      break;
-
-    case 9:
-      centerX = 4328;
-      centerY = 4451;
-      break;
-
-    case 10:
-      centerX = 7020;
-      centerY = 5355;
-      break;
-
-    case 11:
-      centerX = 6959;
-      centerY = 3578;
-      break;
-
-    case 12:
-      centerX = 2337; // WRONG
-      centerY = 5121; // WRONG
-      break;
-
-    case 13:
-      centerX = 8906;
-      centerY = 125;
-      break;
-
-    case 14:
-      centerX = 8520;
-      centerY = 1653;
-      break;
-
-    case 15:
-      centerX = 10905;
-      centerY = 413;
-      break;
-
-    case 16:
-      centerX = 11204;
-      centerY = 2494;
-      break;
-
-    case 17:
-      centerX = 8994;
-      centerY = 2697;
-      break;
-
-    case 18:
-      centerX = 2337;
-      centerY = 5121;
-      break;
-
-    case 19:
-      centerX = 10458;
-      centerY = 4007;
-      break;
-
-    case 20:
-      centerX = 11221;
-      centerY = 4700;
-      break;
-  }
-}
