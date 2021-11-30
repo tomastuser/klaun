@@ -86,8 +86,14 @@ function draw() {
     textSize(64);
     text('Projeďte si s námi', 800, 350);
     text('naši 20 letou cestu smíchu!', 800, 450);
-    fill(introArrowHover ? 255 : 55, 77, 137);
-    image(arrowR, 700, 580);
+    noFill();
+    stroke(55, 77, 137);
+    strokeWeight(4);
+    if (introArrowHover) {
+      rect(680, 560, 240, 180, 10);
+    }
+    noStroke();
+    image(arrowR, 680, 580);
     // text('->', 800, 580);
     textAlign(LEFT);
 
@@ -224,38 +230,49 @@ function draw() {
     //   text((mouseY * my + 180 * my).toFixed(0), 100, 500);
     // text(centerX, 100, 350);
     // text(centerY, 100, 400);
-    // text(mouseX.toFixed(0), 20, 350);
-    // text(mouseY.toFixed(0), 20, 400);
     // tkext(x, 20, 450);
     // text(y, 20, 500);
     // text(pos, 20, 650);
     textSize(64);
     fill(0);
+    // text(mouseX.toFixed(0), 20, 350);
+    // text(mouseY.toFixed(0), 20, 400);
     // text(sin(angle), 20, 650);
     // text(isInPositiveMotion, 20, 550);
     // text(newSizeRatio, 20, 600);
     // text(step, 800, 50);
-    fill(leftArrowHover ? 255 : 55, 77, 137);
-    image(arrowL, 730, 820, 121, 74);
-    // text('<-', 750, 860);
-    fill(55, 77, 137);
-    fill(rightArrowHover ? 255 : 55, 77, 137);
-    image(arrowR, 870, 820, 121, 74);
+    noFill();
+
+    stroke(55, 77, 137);
+    strokeWeight(4);
+    if (leftArrowHover) {
+      rect(679, 820, 121, 74, 10);
+    }
+    noStroke();
+    image(arrowL, 679, 820, 121, 74);
+
+    stroke(55, 77, 137);
+    strokeWeight(4);
+    if (rightArrowHover) {
+      rect(800, 820, 121, 74, 10);
+    }
+    noStroke();
+    image(arrowR, 800, 820, 121, 74);
     // text('->', 850, 860);
   }
 }
 
 function mouseMoved() {
-  if (mouseX > 730 && mouseX < 805 && mouseY > 830 && mouseY < 900) {
+  if (mouseX > 679 && mouseX < 800 && mouseY > 820 && mouseY < 894) {
     leftArrowHover = true;
   } else leftArrowHover = false;
 
-  if (mouseX > 820 && mouseX < 900 && mouseY > 810 && mouseY < 900) {
+  if (mouseX > 800 && mouseX < 921 && mouseY > 820 && mouseY < 894) {
     rightArrowHover = true;
   } else rightArrowHover = false;
 
   if (intro) {
-    if (mouseX > 780 && mouseX < 820 && mouseY > 550 && mouseY < 600) {
+    if (mouseX > 680 && mouseX < 920 && mouseY > 560 && mouseY < 740) {
       introArrowHover = true;
     } else introArrowHover = false;
   }
@@ -286,22 +303,22 @@ function moveLeft() {
 }
 
 function mousePressed() {
-  if (intro && mouseX > 680 && mouseX < 820 && mouseY > 550 && mouseY < 700) {
+  if (intro && mouseX > 680 && mouseX < 920 && mouseY > 560 && mouseY < 740) {
     fadeOut = true;
   }
   if (
-    mouseX > 720 &&
-    mouseX < 805 &&
-    mouseY > 810 &&
-    mouseY < 900 &&
+    mouseX > 679 &&
+    mouseX < 800 &&
+    mouseY > 820 &&
+    mouseY < 894 &&
     step > 0
   ) {
     moveLeft();
   } else if (
-    mouseX > 830 &&
-    mouseX < 940 &&
-    mouseY > 810 &&
-    mouseY < 900 &&
+    mouseX > 800 &&
+    mouseX < 921 &&
+    mouseY > 820 &&
+    mouseY < 894 &&
     step < 20
   ) {
     moveRight();
