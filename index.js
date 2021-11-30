@@ -246,28 +246,28 @@ function draw() {
     stroke(55, 77, 137);
     strokeWeight(4);
     if (leftArrowHover) {
-      rect(679, 820, 121, 74, 10);
+      rect(669, 820, 121, 74, 10);
     }
     noStroke();
-    image(arrowL, 679, 820, 121, 74);
+    image(arrowL, 669, 820, 121, 74);
 
     stroke(55, 77, 137);
     strokeWeight(4);
     if (rightArrowHover) {
-      rect(800, 820, 121, 74, 10);
+      rect(810, 820, 121, 74, 10);
     }
     noStroke();
-    image(arrowR, 800, 820, 121, 74);
+    image(arrowR, 810, 820, 121, 74);
     // text('->', 850, 860);
   }
 }
 
 function mouseMoved() {
-  if (mouseX > 679 && mouseX < 800 && mouseY > 820 && mouseY < 894) {
+  if (mouseX > 669 && mouseX < 800 && mouseY > 820 && mouseY < 894) {
     leftArrowHover = true;
   } else leftArrowHover = false;
 
-  if (mouseX > 800 && mouseX < 921 && mouseY > 820 && mouseY < 894) {
+  if (mouseX > 810 && mouseX < 921 && mouseY > 820 && mouseY < 894) {
     rightArrowHover = true;
   } else rightArrowHover = false;
 
@@ -307,7 +307,7 @@ function mousePressed() {
     fadeOut = true;
   }
   if (
-    mouseX > 679 &&
+    mouseX > 669 &&
     mouseX < 800 &&
     mouseY > 820 &&
     mouseY < 894 &&
@@ -315,7 +315,7 @@ function mousePressed() {
   ) {
     moveLeft();
   } else if (
-    mouseX > 800 &&
+    mouseX > 810 &&
     mouseX < 921 &&
     mouseY > 820 &&
     mouseY < 894 &&
