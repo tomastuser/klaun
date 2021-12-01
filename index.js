@@ -1,7 +1,7 @@
 let x, y;
 let newSizeRatio = 0;
 let inc;
-const speedRatio = 350;
+const speedRatio = 200;
 let angle = 0;
 const mx = 8.77;
 const my = 7.795;
@@ -18,7 +18,7 @@ let introCounter = 255;
 let isInPositiveMotion = false;
 let isInNegativeMotion = false;
 let initialStepSetup = true;
-let img, arrowL, arrowR, music, auto, autostart;
+let img, introImg, arrowL, arrowR, music, auto, autostart;
 // let intro = false;
 let intro = true;
 let leftArrowHover = false;
@@ -27,6 +27,7 @@ let introArrowHover = false;
 let fadeOut = false;
 
 const positions = [
+  { centerX: 0, centerY: 0, controlX: 0, controlY: 0, size: 5 },
   { centerX: 0, centerY: 885, controlX: 54, controlY: 171, size: 1.1 },
   { centerX: 1230, centerY: 1400, controlX: 14, controlY: 264, size: 1.05 },
   { centerX: 0, centerY: 3440, controlX: 108, controlY: 331, size: 1.05 },
@@ -47,17 +48,17 @@ const positions = [
   { centerX: 8503, centerY: 4373, controlX: 1142, controlY: 541, size: 1.33 },
   { centerX: 10358, centerY: 3707, controlX: 1340, controlY: 520, size: 1.2 },
   { centerX: 11221, centerY: 4600, controlX: 119, controlY: 142, size: 1.1 },
-  { centerX: 0, centerY: 0, controlX: 3556, controlY: 935, size: 5 },
+  { centerX: 1, centerY: 1, controlX: 3556, controlY: 935, size: 5 },
 ];
 
 function preload() {
   img = loadImage('k.jpg');
   arrowL = loadImage('arrowL.png');
   arrowR = loadImage('arrowR.png');
-  img = loadImage('k.jpg');
+  introImg = loadImage('intro.jpg');
   soundFormats('mp3');
   music = loadSound('hud');
-  music.setVolume(0.2);
+  music.setVolume(0.1);
   // auto = loadSound('autoj');
   // autostart = loadSound('auto');
   fontBold = loadFont('public/calibri-regular.ttf');
@@ -77,23 +78,26 @@ function draw() {
   background(255);
   if (intro) {
     noStroke();
-    fill(255, 255, 255);
-    rect(0, 0, 1600, 900);
+    image(introImg, 0, 0, 1600, 900);
+    fill(55, 77, 137);
+    // rectMode(CENTER);
+    // rect(800, 120, 600, 180, 20);
+    // rectMode(CORNER);
     textFont(fontBold);
 
-    fill(55, 77, 137);
+    fill(255);
     textAlign(CENTER, CENTER);
-    textSize(64);
-    text('Projeďte si s námi', 800, 350);
-    text('naši 20 letou cestu smíchu!', 800, 450);
+    // textSize(48);
+    // text('Projeďte si s námi', 800, 80);
+    // text('naši 20 letou cestu smíchu!', 800, 150);
     noFill();
     stroke(55, 77, 137);
     strokeWeight(4);
     if (introArrowHover) {
-      rect(680, 560, 240, 180, 10);
+      rect(1350, 730, 240, 150, 10);
     }
     noStroke();
-    image(arrowR, 680, 580);
+    image(arrowR, 1350, 730);
     // text('->', 800, 580);
     textAlign(LEFT);
 
@@ -116,6 +120,9 @@ function draw() {
     }
   } else {
     if (introCounter > 0) {
+      if (introCounter === 75) {
+        moveRight();
+      }
       introCounter -= 2;
     }
     if (isInPositiveMotion) {
@@ -272,18 +279,23 @@ function mouseMoved() {
   } else rightArrowHover = false;
 
   if (intro) {
-    if (mouseX > 680 && mouseX < 920 && mouseY > 560 && mouseY < 740) {
+    if (
+      mouseX > 1350 &&
+      mouseX < 1350 + 240 &&
+      mouseY > 730 &&
+      mouseY < 730 + 121
+    ) {
       introArrowHover = true;
     } else introArrowHover = false;
   }
 }
 
 function moveRight() {
-  if (test && step < 19) {
+  if (test && step < positions.length - 1) {
     step++;
-  } else if (test && step >= 19) {
+  } else if (test && step >= positions.length - 1) {
     step = 0;
-  } else if (!isInNegativeMotion && step < 20) {
+  } else if (!isInNegativeMotion && step < positions.length) {
     inc = PI / (speedRatio + random(100));
     // auto.play();
     isInPositiveMotion = true;
@@ -294,7 +306,7 @@ function moveLeft() {
   if (test && step > 0) {
     step--;
   } else if (test && step <= 0) {
-    step = 19;
+    step = positions.length - 1;
   } else if (!isInPositiveMotion && step > 0) {
     inc = PI / (speedRatio + random(100));
     // auto.play();
@@ -303,7 +315,7 @@ function moveLeft() {
 }
 
 function mousePressed() {
-  if (intro && mouseX > 680 && mouseX < 920 && mouseY > 560 && mouseY < 740) {
+  if (intro && mouseX > 1350 && mouseX < 1600 && mouseY > 730 && mouseY < 900) {
     fadeOut = true;
   }
   if (
@@ -319,7 +331,7 @@ function mousePressed() {
     mouseX < 921 &&
     mouseY > 820 &&
     mouseY < 894 &&
-    step < 20
+    step < positions.length
   ) {
     moveRight();
   }
