@@ -18,6 +18,41 @@ body {
     max-height: 100vh !important;
     object-fit: contain;
   }
+  #vs {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+  }
+  #c {
+    max-width: 90vw !important;
+    max-height: 100vh !important;
+    object-fit: contain;
+    pointer-events: none;
+    /* background-color: rgba(250, 200, 200, 100); */
+  }
+  #cont > button > img {
+    width: 10vw;
+    height: auto;
+  }
+  #cont > button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  #cont > button {
+    display: none;
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    border-radius: 30px;
+  }
+  #cont {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
 }
 
 .loading-2 {

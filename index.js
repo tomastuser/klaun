@@ -18,13 +18,16 @@ let introCounter = 255;
 let isInPositiveMotion = false;
 let isInNegativeMotion = false;
 let initialStepSetup = true;
-let img, introImg, arrowL, arrowR, music, auto, autostart;
+let img, introImg, outroImg, arrowL, arrowR, music, end;
 // let intro = false;
 let intro = true;
+let outro = false;
+let outroFadeOut = false;
 let leftArrowHover = false;
 let rightArrowHover = false;
 let introArrowHover = false;
 let fadeOut = false;
+let c, start, left, right, mute;
 
 const positions = [
   { centerX: 0, centerY: 0, controlX: 0, controlY: 0, size: 5 },
@@ -56,11 +59,12 @@ function preload() {
   arrowL = loadImage('arrowL.png');
   arrowR = loadImage('arrowR.png');
   introImg = loadImage('intro.jpg');
+  outroImg = loadImage('outro.jpg');
   soundFormats('mp3');
   music = loadSound('hud');
+  end = loadSound('end2');
   music.setVolume(0.1);
-  // auto = loadSound('autoj');
-  // autostart = loadSound('auto');
+  end.setVolume(0.3);
   fontBold = loadFont('public/calibri-regular.ttf');
 }
 
@@ -71,7 +75,19 @@ function setup() {
   x = positions[step].centerX;
   y = positions[step].centerY;
   newSizeRatio = positions[0].size - 1;
-  //   nabytek = new Ratio(1, 128, 320, 180, '    ');
+  console.log(positions.length);
+  c = document.getElementById('c');
+  start = document.getElementById('start');
+  left = document.getElementById('left');
+  right = document.getElementById('right');
+  mute = document.getElementById('mute');
+  start.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
+  start.style.right = `${c.getBoundingClientRect().left + 20}px`;
+  right.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
+  right.style.right = `${c.getBoundingClientRect().left + 20}px`;
+  start.onclick = () => {
+    fadeOut = true;
+  };
 }
 
 function draw() {
@@ -79,27 +95,6 @@ function draw() {
   if (intro) {
     noStroke();
     image(introImg, 0, 0, 1600, 900);
-    fill(55, 77, 137);
-    // rectMode(CENTER);
-    // rect(800, 120, 600, 180, 20);
-    // rectMode(CORNER);
-    textFont(fontBold);
-
-    fill(255);
-    textAlign(CENTER, CENTER);
-    // textSize(48);
-    // text('Projeďte si s námi', 800, 80);
-    // text('naši 20 letou cestu smíchu!', 800, 150);
-    noFill();
-    stroke(55, 77, 137);
-    strokeWeight(4);
-    if (introArrowHover) {
-      rect(1350, 730, 240, 150, 10);
-    }
-    noStroke();
-    image(arrowR, 1350, 730);
-    // text('->', 800, 580);
-    textAlign(LEFT);
 
     if (introCounter > 0) {
       fill(0, sin((introCounter / 255) * HALF_PI) * 255);
@@ -111,19 +106,43 @@ function draw() {
       }
       introCounter += 6;
     }
+    start.style.opacity = sin((introCounter / 255) * HALF_PI + HALF_PI);
     rect(0, 0, 1600, 900);
     if (introCounter >= 500) {
       music.play();
-      // autostart.play();
       introCounter = 255;
       intro = false;
+      start.style.display = 'none';
     }
+  } else if (outro) {
+    noStroke();
+    image(outroImg, 0, 0, 1600, 900);
+    if (introCounter > 0) {
+      fill(0, sin((introCounter / 255) * HALF_PI) * 255);
+      introCounter -= 2;
+    } else fill(0, 0);
+    rect(0, 0, 1600, 900);
   } else {
     if (introCounter > 0) {
       if (introCounter === 75) {
         moveRight();
       }
       introCounter -= 2;
+    }
+    if (outroFadeOut) {
+      if (introCounter < 255) {
+        introCounter += 5;
+      } else if (introCounter > 255) {
+        outroFadeOut = false;
+        outro = true;
+      }
+      if (introCounter > -1200 && introCounter < -1190) {
+        isInPositiveMotion = true;
+        music.setVolume(0, 2);
+      }
+      if (introCounter > -1900 && introCounter < -1890) {
+        end.play();
+      }
     }
     if (isInPositiveMotion) {
       if (angle > HALF_PI) {
@@ -237,11 +256,11 @@ function draw() {
     //   text((mouseY * my + 180 * my).toFixed(0), 100, 500);
     // text(centerX, 100, 350);
     // text(centerY, 100, 400);
-    // tkext(x, 20, 450);
-    // text(y, 20, 500);
+    fill(0);
+    // text(outro, 20, 450);
+    // text(introCounter, 20, 500);
     // text(pos, 20, 650);
     textSize(64);
-    fill(0);
     // text(mouseX.toFixed(0), 20, 350);
     // text(mouseY.toFixed(0), 20, 400);
     // text(sin(angle), 20, 650);
@@ -295,10 +314,14 @@ function moveRight() {
     step++;
   } else if (test && step >= positions.length - 1) {
     step = 0;
-  } else if (!isInNegativeMotion && step < positions.length) {
+  } else if (!isInNegativeMotion && step < positions.length - 3) {
     inc = PI / (speedRatio + random(100));
-    // auto.play();
     isInPositiveMotion = true;
+  } else if (step === positions.length - 3) {
+    inc = PI / (speedRatio + random(100));
+    isInPositiveMotion = true;
+    introCounter = -2650;
+    outroFadeOut = true;
   }
 }
 
@@ -306,18 +329,16 @@ function moveLeft() {
   if (test && step > 0) {
     step--;
   } else if (test && step <= 0) {
-    step = positions.length - 1;
+    step = positions.length - 2;
   } else if (!isInPositiveMotion && step > 0) {
     inc = PI / (speedRatio + random(100));
-    // auto.play();
     isInNegativeMotion = true;
   }
 }
 
 function mousePressed() {
-  if (intro && mouseX > 1350 && mouseX < 1600 && mouseY > 730 && mouseY < 900) {
-    fadeOut = true;
-  }
+  // if (intro && mouseX > 1350 && mouseX < 1600 && mouseY > 730 && mouseY < 900) {
+  // }
   if (
     mouseX > 669 &&
     mouseX < 800 &&
