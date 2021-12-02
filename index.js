@@ -85,6 +85,7 @@ function setup() {
   start.style.right = `${c.getBoundingClientRect().left + 20}px`;
   right.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
   right.style.right = `${c.getBoundingClientRect().left + 20}px`;
+  start.style.display = 'block';
   start.onclick = () => {
     fadeOut = true;
   };
