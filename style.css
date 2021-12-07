@@ -84,12 +84,18 @@ body::after {
 #left:hover #leftImg {
   content: url('./arrowLF.png');
 }
+#left:focus #leftImg {
+  content: url('./arrowLF.png');
+}
 #left > img {
   width: 60px;
   height: auto;
 }
 
 #right:hover #rightImg {
+  content: url('./arrowRF.png');
+}
+#right:focus #rightImg {
   content: url('./arrowRF.png');
 }
 
