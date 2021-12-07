@@ -18,7 +18,7 @@ let introCounter = 255;
 let isInPositiveMotion = false;
 let isInNegativeMotion = false;
 let initialStepSetup = true;
-let img, introImg, outroImg, arrowL, arrowR, music, end;
+let img, introImg, outroImg, konf, music, music2, end;
 // let intro = false;
 let intro = true;
 let outro = false;
@@ -55,50 +55,84 @@ const positions = [
 ];
 
 function preload() {
-  img = loadImage('k.jpg');
-  arrowL = loadImage('arrowL.png');
-  arrowR = loadImage('arrowR.png');
+  img = loadImage('k2.jpg');
   introImg = loadImage('intro.jpg');
   outroImg = loadImage('outro.jpg');
+  konf = loadImage('konf.png');
   soundFormats('mp3');
   music = loadSound('hud');
-  end = loadSound('end2');
+  music2 = loadSound('hud2');
+  end = loadSound('end');
   music.setVolume(0.1);
+  music2.setVolume(0.2);
   end.setVolume(0.3);
-  fontBold = loadFont('public/calibri-regular.ttf');
 }
+
+let particles = [];
+const gravity = 0.25;
+let colors;
+let endColor;
 
 function setup() {
   var canvas = createCanvas(canvasWidth, canvasHeight);
   canvas.parent('sketch-holder');
+  colors = ['red', color(55, 77, 139), 'white'];
   inc = PI / speedRatio;
   x = positions[step].centerX;
   y = positions[step].centerY;
   newSizeRatio = positions[0].size - 1;
-  console.log(positions.length);
   c = document.getElementById('c');
   start = document.getElementById('start');
   left = document.getElementById('left');
   right = document.getElementById('right');
-  mute = document.getElementById('mute');
+  soundOn = document.getElementById('soundOn');
+  soundOff = document.getElementById('soundOff');
   start.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
   start.style.right = `${c.getBoundingClientRect().left + 20}px`;
-  right.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
-  right.style.right = `${c.getBoundingClientRect().left + 20}px`;
+  right.style.bottom = `${c.getBoundingClientRect().top + 10}px`;
+  right.style.right = `${c.getBoundingClientRect().left + 10}px`;
+  left.style.bottom = `${c.getBoundingClientRect().top + 10}px`;
+  left.style.right = `${c.getBoundingClientRect().left + 90}px`;
+  soundOn.style.top = `${c.getBoundingClientRect().top + 10}px`;
+  soundOn.style.right = `${c.getBoundingClientRect().left + 5}px`;
+  soundOff.style.top = `${c.getBoundingClientRect().top + 10}px`;
+  soundOff.style.right = `${c.getBoundingClientRect().left + 5}px`;
+
   start.style.display = 'block';
   start.onclick = () => {
     fadeOut = true;
   };
+  left.onclick = () => {
+    moveLeft();
+  };
+  right.onclick = () => {
+    moveRight();
+  };
+  soundOn.onclick = () => {
+    soundOn.style.display = 'none';
+    soundOff.style.display = 'block';
+    music.setVolume(0);
+  };
+  soundOff.onclick = () => {
+    soundOff.style.display = 'none';
+    soundOn.style.display = 'block';
+    music.setVolume(0.1);
+  };
 }
+
+// function mousePressed() {
+//   particles.push(new Firework(mouseX, mouseY));
+// }
 
 function draw() {
   background(255);
+
   if (intro) {
     noStroke();
     image(introImg, 0, 0, 1600, 900);
 
     if (introCounter > 0) {
-      fill(0, sin((introCounter / 255) * HALF_PI) * 255);
+      fill(0, sin(((introCounter - 10) / 255) * HALF_PI) * 255);
       introCounter -= 2;
     } else fill(0, 0);
     if (fadeOut && introCounter < 500) {
@@ -114,6 +148,9 @@ function draw() {
       introCounter = 255;
       intro = false;
       start.style.display = 'none';
+      left.style.display = 'block';
+      right.style.display = 'block';
+      soundOn.style.display = 'block';
     }
   } else if (outro) {
     noStroke();
@@ -129,6 +166,9 @@ function draw() {
         moveRight();
       }
       introCounter -= 2;
+      left.style.opacity = sin((introCounter / 255) * HALF_PI + HALF_PI);
+      right.style.opacity = sin((introCounter / 255) * HALF_PI + HALF_PI);
+      soundOn.style.opacity = sin((introCounter / 255) * HALF_PI + HALF_PI);
     }
     if (outroFadeOut) {
       if (introCounter < 255) {
@@ -136,13 +176,21 @@ function draw() {
       } else if (introCounter > 255) {
         outroFadeOut = false;
         outro = true;
+        music2.play();
       }
       if (introCounter > -1200 && introCounter < -1190) {
         isInPositiveMotion = true;
+
         music.setVolume(0, 2);
       }
-      if (introCounter > -1900 && introCounter < -1890) {
+      if (introCounter > -2400 && introCounter < -2390) {
         end.play();
+        particles.push(new Firework(random(740, 1000), random(459, 690)));
+      }
+      if (introCounter > -2400 && introCounter < -1600) {
+        if (introCounter % 50 === 0) {
+          particles.push(new Firework(random(740, 1000), random(100, 690)));
+        }
       }
     }
     if (isInPositiveMotion) {
@@ -250,43 +298,47 @@ function draw() {
     }
 
     noStroke();
-    // textSize(32);
+    textSize(32);
+    fill(0);
     // text((mouseX * mx).toFixed(0), 100, 350);
     // text((mouseY * my).toFixed(0), 100, 400);
     //   text((mouseX * mx + 320 * mx).toFixed(0), 100, 450);
     //   text((mouseY * my + 180 * my).toFixed(0), 100, 500);
     // text(centerX, 100, 350);
     // text(centerY, 100, 400);
-    fill(0);
     // text(outro, 20, 450);
     // text(introCounter, 20, 500);
     // text(pos, 20, 650);
-    textSize(64);
     // text(mouseX.toFixed(0), 20, 350);
     // text(mouseY.toFixed(0), 20, 400);
     // text(sin(angle), 20, 650);
     // text(isInPositiveMotion, 20, 550);
     // text(newSizeRatio, 20, 600);
     // text(step, 800, 50);
-    noFill();
+    // noFill();
 
-    stroke(55, 77, 137);
-    strokeWeight(4);
-    if (leftArrowHover) {
-      rect(669, 820, 121, 74, 10);
-    }
-    noStroke();
-    image(arrowL, 669, 820, 121, 74);
+    // stroke(55, 77, 137);
+    // strokeWeight(4);
+    // if (leftArrowHover) {
+    //   rect(669, 820, 121, 74, 10);
+    // }
+    // noStroke();
+    // image(arrowL, 669, 820, 121, 74);
 
-    stroke(55, 77, 137);
-    strokeWeight(4);
-    if (rightArrowHover) {
-      rect(810, 820, 121, 74, 10);
-    }
-    noStroke();
-    image(arrowR, 810, 820, 121, 74);
+    // stroke(55, 77, 137);
+    // strokeWeight(4);
+    // if (rightArrowHover) {
+    //   rect(810, 820, 121, 74, 10);
+    // }
+    // noStroke();
+    // image(arrowR, 810, 820, 121, 74);
     // text('->', 850, 860);
   }
+  particles.forEach((p) => {
+    p.step();
+    p.draw();
+  });
+  particles = particles.filter((p) => p.isAlive);
 }
 
 function mouseMoved() {
@@ -311,17 +363,17 @@ function mouseMoved() {
 }
 
 function moveRight() {
-  if (test && step < positions.length - 1) {
+  if (test && step < positions.length - 2) {
     step++;
-  } else if (test && step >= positions.length - 1) {
-    step = 0;
+  } else if (test && step >= positions.length - 2) {
+    step = 1;
   } else if (!isInNegativeMotion && step < positions.length - 3) {
     inc = PI / (speedRatio + random(100));
     isInPositiveMotion = true;
   } else if (step === positions.length - 3) {
     inc = PI / (speedRatio + random(100));
     isInPositiveMotion = true;
-    introCounter = -2650;
+    introCounter = -3150;
     outroFadeOut = true;
   }
 }
@@ -337,28 +389,6 @@ function moveLeft() {
   }
 }
 
-function mousePressed() {
-  // if (intro && mouseX > 1350 && mouseX < 1600 && mouseY > 730 && mouseY < 900) {
-  // }
-  if (
-    mouseX > 669 &&
-    mouseX < 800 &&
-    mouseY > 820 &&
-    mouseY < 894 &&
-    step > 0
-  ) {
-    moveLeft();
-  } else if (
-    mouseX > 810 &&
-    mouseX < 921 &&
-    mouseY > 820 &&
-    mouseY < 894 &&
-    step < positions.length
-  ) {
-    moveRight();
-  }
-}
-
 function keyTyped() {
   if (key === ' ') {
     test = !test;
@@ -371,5 +401,89 @@ function keyPressed() {
   }
   if (keyCode === RIGHT_ARROW) {
     moveRight();
+  }
+}
+
+class Particle {
+  constructor(x, y, xSpeed, ySpeed, pColor, size) {
+    this.x = x;
+    this.y = y;
+    this.xSpeed = xSpeed;
+    this.ySpeed = ySpeed;
+    this.color = pColor;
+    this.size = size;
+    this.isAlive = true;
+    this.trail = [];
+    this.trailIndex = 0;
+  }
+
+  step() {
+    this.trail[this.trailIndex] = createVector(this.x, this.y);
+    this.trailIndex++;
+    if (this.trailIndex > 10) {
+      this.trailIndex = 0;
+    }
+    this.x += this.xSpeed;
+    this.y += this.ySpeed;
+
+    this.ySpeed += gravity;
+
+    if (this.y > height) {
+      this.isAlive = false;
+    }
+  }
+
+  draw() {
+    // this.drawTrail();
+    // push();
+    // translate(this.x, this.y);
+    // rotate(frameCount / 10.0);
+    // image(konf, 0, 0);
+    // pop();
+    fill(this.color);
+    noStroke();
+    ellipse(this.x, this.y, this.size, this.size);
+  }
+
+  drawTrail() {
+    let index = 0;
+
+    for (let i = this.trailIndex - 1; i >= 0; i--) {
+      fill(255, 0, 0);
+      noStroke();
+      rect(this.trail[i].x, this.trail[i].y, this.size, this.size);
+      index++;
+    }
+
+    for (let i = this.trail.length - 1; i >= this.trailIndex; i--) {
+      fill(255, 0, 0);
+      noStroke();
+      rect(this.trail[i].x, this.trail[i].y, this.size, this.size);
+      index++;
+    }
+  }
+}
+
+class Firework extends Particle {
+  constructor(x, y) {
+    super(x, y, random(-2, 2), random(-10, -15), random(colors), 10);
+    this.countdown = random(30, 60);
+  }
+
+  step() {
+    super.step();
+
+    const explosionSize = random(20, 50);
+    for (let i = 0; i < explosionSize; i++) {
+      const speed = random(5, 10);
+      const angle = random(TWO_PI);
+      const xSpeed = cos(angle) * speed;
+      const ySpeed = sin(angle) * speed;
+
+      particles.push(
+        new Particle(this.x, this.y, xSpeed, ySpeed, this.color, 15)
+      );
+    }
+    this.isAlive = false;
   }
 }

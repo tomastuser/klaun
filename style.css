@@ -12,21 +12,25 @@ body {
   background-color: black;
 }
 
+#vs {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 1920px) {
   #sketch-holder > canvas {
     max-width: 90vw !important;
     max-height: 100vh !important;
     object-fit: contain;
   }
-  #vs {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    overflow: hidden;
-    justify-content: center;
-    align-items: center;
-  }
+
   #c {
     max-width: 90vw !important;
     max-height: 100vh !important;
@@ -34,25 +38,71 @@ body {
     pointer-events: none;
     /* background-color: rgba(250, 200, 200, 100); */
   }
-  #cont > button > img {
-    width: 10vw;
-    height: auto;
-  }
-  #cont > button:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  #cont > button {
-    display: none;
-    background-color: transparent;
-    border: none;
-    position: absolute;
-    border-radius: 30px;
-  }
-  #cont {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
+}
+
+#start:hover #startImg {
+  content: url('./arrowRF.png');
+}
+#cont > button {
+  display: none;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+}
+#cont {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+#start {
+  opacity: 0;
+}
+#left {
+  opacity: 0;
+}
+#right {
+  opacity: 0;
+}
+#soundOn {
+  opacity: 0;
+}
+#start > img {
+  width: 110px;
+  height: auto;
+}
+
+#left:hover #leftImg {
+  content: url('./arrowLF.png');
+}
+#left > img {
+  width: 60px;
+  height: auto;
+}
+
+#right:hover #rightImg {
+  content: url('./arrowRF.png');
+}
+
+/* #rightImg{
+    content: url('./arrowRF.png');
+  } */
+#right > img {
+  width: 60px;
+  height: auto;
+}
+#soundOn > img {
+  width: 60px;
+  height: auto;
+}
+#soundOff > img {
+  width: 60px;
+  height: auto;
+}
+#soundOn:hover #soundOnImg {
+  content: url('./soundOnF.png');
+}
+#soundOff:hover #soundOffImg {
+  content: url('./soundOffF.png');
 }
 
 .loading-2 {
