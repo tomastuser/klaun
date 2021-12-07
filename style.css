@@ -12,6 +12,16 @@ body {
   background-color: black;
 }
 
+body::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  content: url('./arrowLF.png') url('./arrowRF.png') url('./soundOnF.png')
+    url('./soundOffF.png');
+}
+
 #vs {
   position: fixed;
   width: 100vw;

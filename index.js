@@ -180,11 +180,10 @@ function draw() {
       }
       if (introCounter > -1200 && introCounter < -1190) {
         isInPositiveMotion = true;
-
-        music.setVolume(0, 2);
       }
       if (introCounter > -2400 && introCounter < -2390) {
         end.play();
+        music.setVolume(0, 2);
         particles.push(new Firework(random(740, 1000), random(459, 690)));
       }
       if (introCounter > -2400 && introCounter < -1600) {
