@@ -37,12 +37,12 @@ const positions = [
   { centerX: 1480, centerY: 2480, controlX: 334, controlY: 360, size: 1.1 },
   { centerX: 4293, centerY: 2627, controlX: 477, controlY: 129, size: 1 },
   { centerX: 3556, centerY: 935, controlX: 150, controlY: 464, size: 1 },
-  { centerX: 0, centerY: 4850, controlX: 48, controlY: 609, size: 1.4 },
+  { centerX: 0, centerY: 4800, controlX: 48, controlY: 609, size: 1.4 },
   { centerX: 2240, centerY: 5100, controlX: 323, controlY: 556, size: 1.15 },
   { centerX: 3400, centerY: 4000, controlX: 456, controlY: 832, size: 1.3 },
-  { centerX: 6750, centerY: 5355, controlX: 887, controlY: 499, size: 1.1 },
+  { centerX: 6690, centerY: 5090, controlX: 887, controlY: 499, size: 1.25 },
   { centerX: 6959, centerY: 3500, controlX: 682, controlY: 373, size: 1.15 },
-  { centerX: 5675, centerY: 440, controlX: 971, controlY: 70, size: 1.4 },
+  { centerX: 5975, centerY: 440, controlX: 971, controlY: 70, size: 1.4 },
   { centerX: 8906, centerY: 125, controlX: 1181, controlY: 386, size: 1 },
   { centerX: 8520, centerY: 1653, controlX: 1162, controlY: -40, size: 0.9 },
   { centerX: 10905, centerY: 413, controlX: 1326, controlY: 210, size: 1 },
@@ -388,11 +388,11 @@ function moveLeft() {
   }
 }
 
-function keyTyped() {
-  if (key === ' ') {
-    test = !test;
-  }
-}
+// function keyTyped() {
+//   if (key === ' ') {
+//     test = !test;
+//   }
+// }
 
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
