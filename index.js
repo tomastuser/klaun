@@ -90,9 +90,13 @@ function setup() {
   start.style.bottom = `${c.getBoundingClientRect().top + 20}px`;
   start.style.right = `${c.getBoundingClientRect().left + 20}px`;
   right.style.bottom = `${c.getBoundingClientRect().top + 10}px`;
-  right.style.right = `${c.getBoundingClientRect().left + 10}px`;
+  right.style.left = `${
+    c.getBoundingClientRect().left + c.getBoundingClientRect().width / 2 + 10
+  }px`;
   left.style.bottom = `${c.getBoundingClientRect().top + 10}px`;
-  left.style.right = `${c.getBoundingClientRect().left + 90}px`;
+  left.style.left = `${
+    c.getBoundingClientRect().left + c.getBoundingClientRect().width / 2 - 82
+  }px`;
   soundOn.style.top = `${c.getBoundingClientRect().top + 10}px`;
   soundOn.style.right = `${c.getBoundingClientRect().left + 5}px`;
   soundOff.style.top = `${c.getBoundingClientRect().top + 10}px`;
@@ -299,6 +303,7 @@ function draw() {
     noStroke();
     textSize(32);
     fill(0);
+    // ellipse(800, 880, 20, 20);
     // text((mouseX * mx).toFixed(0), 100, 350);
     // text((mouseY * my).toFixed(0), 100, 400);
     //   text((mouseX * mx + 320 * mx).toFixed(0), 100, 450);
