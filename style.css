@@ -46,7 +46,6 @@ body::after {
     max-height: 100vh !important;
     object-fit: contain;
     pointer-events: none;
-    /* background-color: rgba(250, 200, 200, 100); */
   }
 }
 
@@ -93,9 +92,6 @@ body::after {
   content: url('./arrowRF.png');
 }
 
-/* #rightImg{
-    content: url('./arrowRF.png');
-  } */
 #right > img {
   width: 60px;
   height: auto;

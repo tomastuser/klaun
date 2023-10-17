@@ -124,10 +124,6 @@ function setup() {
   };
 }
 
-// function mousePressed() {
-//   particles.push(new Firework(mouseX, mouseY));
-// }
-
 function draw() {
   background(255);
 
@@ -263,7 +259,6 @@ function draw() {
       }
     }
 
-    // image(img, 0, 0, canvasWidth, canvasHeight, centerX, centerY, 2807, 1403);
     if (test) {
       image(img, 0, 0, canvasWidth, canvasHeight, 0, 0, 14032, 7016);
       noFill();
@@ -288,9 +283,6 @@ function draw() {
         canvasHeight,
         x,
         y,
-        // x + cos(angle * 20) * 1.5,
-        // y + sin(radians(millis() + random(20))) * 3,
-        // y + sin(angle * 40) * 3,
         2807 * (1 + newSizeRatio),
         1403 * (1 + newSizeRatio)
       );
@@ -303,40 +295,6 @@ function draw() {
     noStroke();
     textSize(32);
     fill(0);
-    // ellipse(800, 880, 20, 20);
-    // text((mouseX * mx).toFixed(0), 100, 350);
-    // text((mouseY * my).toFixed(0), 100, 400);
-    //   text((mouseX * mx + 320 * mx).toFixed(0), 100, 450);
-    //   text((mouseY * my + 180 * my).toFixed(0), 100, 500);
-    // text(centerX, 100, 350);
-    // text(centerY, 100, 400);
-    // text(outro, 20, 450);
-    // text(introCounter, 20, 500);
-    // text(pos, 20, 650);
-    // text(mouseX.toFixed(0), 20, 350);
-    // text(mouseY.toFixed(0), 20, 400);
-    // text(sin(angle), 20, 650);
-    // text(isInPositiveMotion, 20, 550);
-    // text(newSizeRatio, 20, 600);
-    // text(step, 800, 50);
-    // noFill();
-
-    // stroke(55, 77, 137);
-    // strokeWeight(4);
-    // if (leftArrowHover) {
-    //   rect(669, 820, 121, 74, 10);
-    // }
-    // noStroke();
-    // image(arrowL, 669, 820, 121, 74);
-
-    // stroke(55, 77, 137);
-    // strokeWeight(4);
-    // if (rightArrowHover) {
-    //   rect(810, 820, 121, 74, 10);
-    // }
-    // noStroke();
-    // image(arrowR, 810, 820, 121, 74);
-    // text('->', 850, 860);
   }
   particles.forEach((p) => {
     p.step();
@@ -438,12 +396,6 @@ class Particle {
   }
 
   draw() {
-    // this.drawTrail();
-    // push();
-    // translate(this.x, this.y);
-    // rotate(frameCount / 10.0);
-    // image(konf, 0, 0);
-    // pop();
     fill(this.color);
     noStroke();
     ellipse(this.x, this.y, this.size, this.size);
